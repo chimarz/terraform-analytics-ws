@@ -1,10 +1,10 @@
 terraform {
-  required_version = "~> 1.3.6"
+  required_version = "~> 1.6.0"
 
   required_providers {
     # AWS Provider configuration 
     aws = {
-      version               = "4.45"
+      version = "5.48"
     }
   }
 }
