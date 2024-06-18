@@ -8,4 +8,5 @@ module "analytics" {
 module "source" {
   source      = "./modules/s3_bucket"
   name_prefix = "event-processing-source-"
+  enable_eventbridge_notifications = "true"
 }
