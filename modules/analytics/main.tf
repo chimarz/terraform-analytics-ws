@@ -1,27 +1,20 @@
 #
 # EventBridge resources (previously named CloudWatch Event)
-#
-# Dedicated EventBridge bus
-resource "aws_cloudwatch_event_bus" "events_bus" {
-  name = "${var.workload_name}-bus"
-}
-
 # EventBridge rule, contains a pattern defining how to filter events
 resource "aws_cloudwatch_event_rule" "events_capture_rule" {
   name_prefix    = "${var.workload_name}_"
   description    = "Capture events and trigger firehose execution."
-  event_bus_name = "${var.workload_name}-bus"
+  event_bus_name = "default"
   role_arn       = aws_iam_role.eventbridge_role.arn
   event_pattern  = jsonencode({
-      "source": ["aws.s3"],
-  "detail-type": ["Object Created"]
+      "source": ["aws.s3"]
   })
 }
 
 # EventBridge target. Defines where events that match the rule should be delivered.
 resource "aws_cloudwatch_event_target" "events_capture_target" {
   rule           = aws_cloudwatch_event_rule.events_capture_rule.name
-  event_bus_name = "${var.workload_name}-bus"
+  event_bus_name = "default"
   arn            = aws_kinesis_firehose_delivery_stream.firehose_stream.arn
   role_arn       = aws_iam_role.eventbridge_role.arn
 }
@@ -45,12 +38,13 @@ resource "aws_kinesis_firehose_delivery_stream" "firehose_stream" {
     role_arn   = aws_iam_role.firehose_role.arn
     bucket_arn = module.s3_sink_bucket.arn
     buffering_size = 64
+    buffering_interval = var.buffering_interval
 
     dynamic_partitioning_configuration {
       enabled = "true"
     }
 
-    prefix              = "!{partitionKeyFromQuery:key}/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/"
+    prefix              = "events/!{partitionKeyFromQuery:key}/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/"
     error_output_prefix = "errors/"
 
     processing_configuration {
@@ -73,7 +67,7 @@ resource "aws_kinesis_firehose_delivery_stream" "firehose_stream" {
         }
         parameters {
           parameter_name  = "MetadataExtractionQuery"
-          parameter_value = "{key:.\"${var.partitioning_key}\"}"
+          parameter_value = "{key:.detail.bucket.name}"
         }
 
       }
