@@ -1,13 +1,18 @@
-module "analytics" {
-  source             = "./modules/analytics"
-  workload_name      = "event-processing"
-  s3_arn             = module.source.arn
-  partitioning_key   = "event"
-  buffering_interval = 100
+locals {
+  processor = "processor"
 }
 
-module "source" {
-  source                           = "./modules/s3_bucket"
-  name_prefix                      = "event-processing-source-"
-  enable_eventbridge_notifications = "true"
+module "analytics" {
+  source               = "./modules/analytics"
+  workload_name        = "event-processing"
+  partitioning_key     = "event"
+  buffering_interval   = 100
 }
+
+module "dynamo" {
+  source = "./modules/dynamodb"
+  table_name = "Assets"
+  hash_key   = "tenantId"
+  range_key  = "assetId"
+}
+

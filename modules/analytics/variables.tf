@@ -4,11 +4,6 @@ variable "workload_name"{
     default = "analytics_workload"
 }
 
-variable "s3_arn" {
-    type = string
-    description = "ARN of S3 bucket receiving to be monitored."
-}
-
 variable "partitioning_key" {
     type = string
     description = "Partitioning key."
@@ -18,4 +13,4 @@ variable "buffering_interval" {
     type = string
     description = "Firehose buffering interval. Optional, defaults to 300 seconds."
     default = 300
-    }
+}
