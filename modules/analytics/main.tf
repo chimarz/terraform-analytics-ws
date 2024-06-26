@@ -48,7 +48,7 @@ resource "aws_kinesis_firehose_delivery_stream" "firehose_stream" {
       enabled = "true"
     }
 
-    prefix              = "events/!{partitionKeyFromQuery:key}/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/"
+    prefix              = "events/!{partitionKeyFromQuery:detailType}/"
     error_output_prefix = "errors/"
 
     processing_configuration {
@@ -71,7 +71,7 @@ resource "aws_kinesis_firehose_delivery_stream" "firehose_stream" {
         }
         parameters {
           parameter_name  = "MetadataExtractionQuery"
-          parameter_value = "{key:.detail.bucket.name}"
+          parameter_value = "{detailType:.\"detail-type\"}"
         }
 
       }

@@ -4,11 +4,6 @@ variable "workload_name"{
     default = "analytics_workload"
 }
 
-variable "partitioning_key" {
-    type = string
-    description = "Partitioning key."
-}
-
 variable "buffering_interval" {
     type = string
     description = "Firehose buffering interval. Optional, defaults to 300 seconds."
