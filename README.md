@@ -34,7 +34,7 @@ AWS Cloud9 is a cloud-based integrated development environment (IDE) that lets y
 Check the version of terraform by running `terraform -version`. If not installed, follow these steps to install it:
 
 ```
-url --silent --location -o /tmp/terraform.zip "https://releases.hashicorp.com/terraform/1.6.0/terraform_1.6.0_linux_386.zip"
+curl --silent --location -o /tmp/terraform.zip "https://releases.hashicorp.com/terraform/1.6.0/terraform_1.6.0_linux_386.zip"
 
 unzip /tmp/terraform.zip -d /tmp/terraform
 
