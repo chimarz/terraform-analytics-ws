@@ -54,6 +54,7 @@ python -m pip install -e .
 On Cloud9, access the terminal and clone the git repository:
 
 ```
+cd ..
 git clone https://github.com/chimarz/terraform-analytics-ws
 ```
 
